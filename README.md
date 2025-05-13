@@ -1,5 +1,5 @@
 # ESP07_Growatt_SPF_3500-5000_ES_Monitor
-This project provides Platform.io code for building custom firmware for the WiFi-F module included with the Growatt SPF 3500-5000 ES off-grid inverters. It collects all available metrics through the MODBUS interface and sends them to InfluxDB or MQTT. The inverter's AC output can also be placed in and out of standby mode remotely through MQTT to reduce idle power consumption when the AC output isn't needed. This is a function not available through the inverter's interface and can save quite a lot of energy over time.
+This project provides PlatformIO code for building custom firmware for the WiFi-F module included with the Growatt SPF 3500-5000 ES off-grid inverters. It collects all available metrics through the inverter's MODBUS interface and sends them to InfluxDB v2 or MQTT. The inverter's AC output can also be placed in and out of standby mode remotely through MQTT to reduce idle power consumption when the AC output isn't needed. This is a function not available through the inverter's interface and can save quite a lot of energy over time.
 
 [Otti's project](https://github.com/otti/Growatt_ShineWiFi-S) provided some inspiration, however the newer generation Wifi-F module can be a challenge to interface with. Many serial adaptors (including the popular FTDI and CH340) will fail to communicate with the ESP8266 when plugged directly into the TX/RX pin headers on the PCB. There are two options for overcoming this issue:
 
@@ -12,9 +12,9 @@ I've included OTA components in the firmware so any future updates can be done w
 
 The WiFi-F board seems to be quite power hungry. Powering it through the USB plug from a source slightly above 5v will ensure the onboard buck converter can provide enough current while flashing the ESP.
 
-The Growatt-Grafana-Dashboard.json file can be imported into Grafana to display metrics from InfluxDB as in the screenshot below.
+The Growatt-Grafana-Dashboard.json file can be imported into Grafana to display metrics from InfluxDB v2 as in the screenshot below.
 
-MQTT-Dash.txt can be imported into the [MQTT Dash app](https://play.google.com/store/apps/details?id=net.routix.mqttdash) to provide metrics and inverter control from your Android device.
+MQTT-Dash.txt can be imported into the [MQTT Dash app](https://play.google.com/store/apps/details?id=net.routix.mqttdash) to provide metrics and inverter control from your Android device. If MQTT is not required, it can be disabled by removing _#define MQTT_ from line 1 in main.cpp,
 
 Further details and discussion at DIYSolarForum: https://diysolarforum.com/threads/hacking-the-new-growatt-wifi-f-modules.43231/
 
@@ -40,6 +40,8 @@ Further details and discussion at DIYSolarForum: https://diysolarforum.com/threa
 [JAndrassy for TelnetStream](https://github.com/jandrassy/TelnetStream)
 
 [Nick O'Leary for PubSubClient](https://github.com/knolleary/pubsubclient)
+
+[Tobias Schürg for InfluxDB Client](https://github.com/tobiasschuerg/InfluxDB-Client-for-Arduino/)
 
 
 
@@ -71,3 +73,12 @@ Further details and discussion at DIYSolarForum: https://diysolarforum.com/threa
 	The behaviour of options 1 and 2 are not well defined or implemented.
 	- Added Growatt-Grafana-Dashboard.json, which can be imported into Grafana to quickly construct the dashboard showing all metrics pulled from InfluxDB.
 	- Added MQTT-Dash.txt which can be imported into MQTT Dash for inverter metrics and control from an Android device.
+	
+#### December 27, 2022:
+	- Added MQTT authentication. Update SECRET_MQTT_USER and SECRET_MQTT_PASS in include\secrets.h accordingly.
+
+#### November 12, 2023:
+	- Updated to use the official InfluxDB Client for Arduino, introducing support for InfluxDB v2
+ 
+ #### October 15, 2024:
+	- Added a #define for InfluxDB so the firmware can be run with only MQTT if desired.
